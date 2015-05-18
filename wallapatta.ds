@@ -34,7 +34,9 @@ I built in a simple blog generator into Wallapatta, for personal use. But it's s
 
   This repo contains this blog post, and 3 empty blog posts, a configuration file and templates for blog.
 
-  Edit ``templates/post.coffee`` to change the post template and ``templates/blog.coffee`` to change the blog template. These templates contain the header text which you will need to change (It's now set to my name - Varuna Jayasiri). Compile these <<http://coffeescript.org/(coffeescript>> code to javascript by running ``coffee -c *``.
+  Edit ``templates/post.coffee`` to change the post template and ``templates/blog.coffee`` to change the blog template. Compile these <<http://coffeescript.org/(coffeescript>> code to javascript by running ``coffee -c *``.
+
+  You will have to change the name of the blog, which is "Varuna Jayasiri" in the two tamplate files. And also the Google Analytics code.
 
   Change ``blog.yaml`` to edit blog configurations like the order of posts, post titles, dates, etc.
 
