@@ -1,0 +1,67 @@
+I just started moving my blog from <<http://svbtle.com(Svbtle)>> to a static blog generated that I created. It is based on <<http://vpj.github.io/wallapatta/introduction.html(Wallapatta)>>.
+
+>>>
+ Wallapatta is a tree in Sri Lanka.
+
+Wallapatta is a
+<<http://en.wikipedia.org/wiki/Markdown(Markdown)>> like syntax that can create documents with layouts
+inspired by handouts of Edward R. Tufte^^1^^. We created it to use for documents. The two great things about Wallapatta is that it creates documents with **sidenotes** and **create print frindly documents** - <<http://vpj.github.io/wallapatta/introduction.html(Wallapatta editor)>> creates print layouts with intelligent page breaks by trying not to place breaks at middle of content like most word processing software do.
+
+ >>>
+  ^^1^^ <<http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0000hB
+  (Book design: advice and examples - edwardtufte.com)>>
+
+I built in a simple blog generator into Wallapatta, for personal use. But it's super easy for anyone who wants to give it a go.
+
+#How to start a Wallapatta blog?
+
+ Install the npm
+
+ Fork the git repo
+
+ Run the ocmmand to generate
+
+#What is Wallapatta like?
+
+ It looks like this.
+
+ ```
+  ###Heading 1
+
+   Introduction to **Heading 1**
+
+   * Point one
+
+    Description about point one
+
+   * Point two
+
+   ####Subtopic
+
+    Subtopic content
+
+   This belongs to Heading 1
+
+ >>>
+  ###Heading 1
+
+   Introduction to **Heading 1**
+
+   * Point one
+
+    Description about point one
+
+   * Point two
+
+   ####Subtopic
+
+    Subtopic content
+
+   This belongs to Heading 1
+
+ It uses indentation to identify what belong where. Indentation is required for specifying content for components like lists, code blocks, special blocks, etc as well. So it's more of a programmer friendly syntax. Indentation helps while working with large documents because you can do stuff like **code folding**.
+
+ We've changed some of the syntax from Markdown; for instance, ``<<`` and ``>>`` are used for links instead of ``[]()``, because we felt that it's a little more
+ intuitive due to its resemblence with HTML tags.
+
+ <<http://vpj.github.io/wallapatta/reference.html(Read the Wallapatta reference)>> for a detailed description on each component, including examples for usage.

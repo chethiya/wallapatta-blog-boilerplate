@@ -1,0 +1,25 @@
+paginateTemplate: templates/blog
+postTemplate: templates/post
+postsPerPage: 3
+posts:
+ -
+  id: wallapatta
+  file: wallapatta.ds
+  title: Code name Wallapatta
+  date: May 18, 2015
+ -
+  id: post1
+  file: post1.ds
+  title: Post 1
+  date: May 18, 2014
+ -
+  id: post2
+  file: post2.ds
+  title: Post 2
+  date: May 18, 2014
+ -
+  id: post3
+  file: post3.ds
+  title: Post 3
+  date: May 18, 2014
+
