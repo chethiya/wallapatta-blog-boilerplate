@@ -13,15 +13,44 @@ inspired by handouts of Edward R. Tufte^^1^^. We created it to use for documents
 
 I built in a simple blog generator into Wallapatta, for personal use. But it's super easy for anyone who wants to give it a go.
 
-#How to start a Wallapatta blog?
+###How to start a Wallapatta blog?
 
- Install the npm
+ - **Install <<https://nodejs.org/(Node.js>>
 
- Fork the git repo
+  NPM usually comes with Node.js. Visit <<https://nodejs.org/>> and see installation instructions. It's usually a download and install, unless you want it installed through a package manager like ``brew``.
 
- Run the ocmmand to generate
+ - **Install <<https://www.npmjs.com/package/wallapatta(Wallapatta node odule>>
 
-#What is Wallapatta like?
+  Run the following command in command line.
+
+  ```
+   npm install wallapatta -g
+
+  That's it and you have wallapatta installed.
+
+ - **Fork the <<https://github.com/vpj/wallapatta-blog-boilerplate(boilerplate)>>
+
+  Make a fork of the git repositors on github: <<https://github.com/vpj/wallapatta-blog-boilerplate>>
+
+  This repo contains this blog post, and 3 empty blog posts, a configuration file and templates for blog.
+
+  Edit ``templates/post.coffee`` to change the post template and ``templates/blog.coffee`` to change the blog template. These templates contain the header text which you will need to change (It's now set to my name - Varuna Jayasiri). Compile these <<http://coffeescript.org/(coffeescript>> code to javascript by running ``coffee -c *``.
+
+  Change ``blog.yaml`` to edit blog configurations like the order of posts, post titles, dates, etc.
+
+ - **Generate the blog
+
+  ```
+   wallapatta --blog blog.yaml --output [output_directory] --static
+
+  The above command will create the html files on the ``output_directory`` provided. ``--static`` specifies that it should copy Wallapatta rendering tools to the folder. (You can omit this if you change the templates to get these from a CDN).
+
+  ``blog.css`` file on the boilerplate repository contains some css. This file is used in default templates. So you need to copy them to the ``output_directory``.
+
+ - **That is it!
+
+
+###What is Wallapatta syntax?
 
  It looks like this.
 
