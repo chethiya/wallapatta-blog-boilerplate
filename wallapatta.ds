@@ -1,4 +1,6 @@
-I just started moving my blog from <<http://svbtle.com(Svbtle)>> to a static blog generated that I created. It is based on <<http://vpj.github.io/wallapatta/introduction.html(Wallapatta)>>.
+### Moving to a git based blog powered by Wallapatta
+
+For long time I wanted to move my blog from <<http://chethiya3000.blogspot.com(blogspot)>> to a git based blog. Since <<http://twitter.com/vpj(@vpj)>> has created some <<http://vpj.github.io/wallapatta.html(boilerplates)>>  based on <<http://vpj.github.io/wallapatta/introduction.html(Wallapatta)>> I thought this is good time to do that. 
 
 >>>
  Wallapatta is a tree in Sri Lanka.
@@ -8,91 +10,7 @@ Wallapatta is a
 inspired by handouts of Edward R. Tufte^^1^^. We created it to use for documents. The two great things about Wallapatta is that it creates documents with **sidenotes** and **create print frindly documents** - <<http://vpj.github.io/wallapatta/introduction.html(Wallapatta editor)>> creates print layouts with intelligent page breaks by trying not to place breaks at middle of content like most word processing software do.
 
  >>>
+  
   ^^1^^ <<http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0000hB
   (Book design: advice and examples - edwardtufte.com)>>
 
-I built in a simple blog generator into Wallapatta, for personal use. But it's super easy for anyone who wants to give it a go.
-
-###How to start a Wallapatta blog?
-
- - **Install <<https://nodejs.org/(Node.js>>
-
-  NPM usually comes with Node.js. Visit <<https://nodejs.org/>> and see installation instructions. It's usually a download and install, unless you want it installed through a package manager like ``brew``.
-
- - **Install <<https://www.npmjs.com/package/wallapatta(Wallapatta node odule>>
-
-  Run the following command in command line.
-
-  ```
-   npm install wallapatta -g
-
-  That's it and you have wallapatta installed.
-
- - **Fork the <<https://github.com/vpj/wallapatta-blog-boilerplate(boilerplate)>>
-
-  Make a fork of the git repositors on github: <<https://github.com/vpj/wallapatta-blog-boilerplate>>
-
-  This repo contains this blog post, and 3 empty blog posts, a configuration file and templates for blog.
-
-  Edit ``templates/post.coffee`` to change the post template and ``templates/blog.coffee`` to change the blog template. Compile these <<http://coffeescript.org/(coffeescript>> code to javascript by running ``coffee -c *``.
-
-  You will have to change the name of the blog, which is "Varuna Jayasiri" in the two tamplate files. And also the Google Analytics code.
-
-  Change ``blog.yaml`` to edit blog configurations like the order of posts, post titles, dates, etc.
-
- - **Generate the blog
-
-  ```
-   wallapatta --blog blog.yaml --output [output_directory] --static
-
-  The above command will create the html files on the ``output_directory`` provided. ``--static`` specifies that it should copy Wallapatta rendering tools to the folder. (You can omit this if you change the templates to get these from a CDN).
-
-  ``blog.css`` file on the boilerplate repository contains some css. This file is used in default templates. So you need to copy them to the ``output_directory``.
-
- - **That is it!
-
-
-###What is Wallapatta syntax?
-
- It looks like this.
-
- ```
-  ###Heading 1
-
-   Introduction to **Heading 1**
-
-   * Point one
-
-    Description about point one
-
-   * Point two
-
-   ####Subtopic
-
-    Subtopic content
-
-   This belongs to Heading 1
-
- >>>
-  ###Heading 1
-
-   Introduction to **Heading 1**
-
-   * Point one
-
-    Description about point one
-
-   * Point two
-
-   ####Subtopic
-
-    Subtopic content
-
-   This belongs to Heading 1
-
- It uses indentation to identify what belong where. Indentation is required for specifying content for components like lists, code blocks, special blocks, etc as well. So it's more of a programmer friendly syntax. Indentation helps while working with large documents because you can do stuff like **code folding**.
-
- We've changed some of the syntax from Markdown; for instance, ``<<`` and ``>>`` are used for links instead of ``[]()``, because we felt that it's a little more
- intuitive due to its resemblence with HTML tags.
-
- <<http://vpj.github.io/wallapatta/reference.html(Read the Wallapatta reference)>> for a detailed description on each component, including examples for usage.

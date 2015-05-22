@@ -14,7 +14,7 @@ template = ->
  @html ->
   @head ->
    @meta charset: "utf-8"
-   @title "Varuna Jayasiri"
+   @title "Chethiya's blog"
    @meta name: "viewport", content: "width=device-width, initial-scale=1.0"
    @meta name: "apple-mobile-web-app-capable", content:"yes"
    @link
@@ -28,20 +28,21 @@ template = ->
    @link href: "blog.css", rel: "stylesheet"
    @script '''
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-44255805-1', 'auto');
-  ga('send', 'pageview');
+          ga('create', 'UA-63286859-1', 'auto');
+            ga('send', 'pageview');
+
    '''
 
   @body ->
    @div ".container.wallapatta-container", ->
     @div ".header", ->
      @h1 ->
-      @a href: "index.html", "VARUNA JAYASIRI"
-     @a ".button", href: "https://www.twitter.com/vpj", "@vpj"
+      @a href: "index.html", "CHETHIYA ABEYSINGHE"
+     @a ".button", href: "https://www.twitter.com/chethiyaa", "@chethiyaa"
     for post, i in @$.posts
      @div ".wallapatta", ->
       @h1 ".title", ->
