@@ -7,4 +7,9 @@ posts:
   file: wallapatta.ds
   title: Git based blogging powered by Wallapatta
   date: May 22, 2015
+ -
+  id: lds
+  file: lds.ds
+  title: LargeDS is a set of JS Typed Arrays based Data Strcutures for memory intesive tasks
+  date: July 07, 2015
 
