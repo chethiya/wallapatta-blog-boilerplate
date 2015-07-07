@@ -10,6 +10,6 @@ posts:
  -
   id: lds
   file: lds.ds
-  title: LargeDS is a set of JS Typed Arrays based Data Strcutures for memory intesive tasks
+  title: LargeDS: Typed Arrays based Data Strcutures for memory intesive tasks
   date: July 07, 2015
 

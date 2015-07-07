@@ -17,7 +17,7 @@
  Here's how to use LDS to implement ``<string,number>`` map in Coffescript.
 
  >>>
-  At the moment LDS only supports String keys
+  At the moment LDS only supports String keys in hash tables
 
  ```coffeescript
   LDS = require 'lds'
@@ -83,7 +83,7 @@
   p.setValues [1, 2, 3]
 
  >>>
-  Only firs 3 values of ``values`` will be set
+  Only first 3 values of ``values`` will be set
 
 
  ```coffeescript
@@ -100,8 +100,7 @@
  >>>
   Sets the 5th element of ``address`` to LDS.string ``str``
 
- Can set LDS.String values instead of JS native Strings by setting the 3rd argument ``true`` in all setter functions
-
+  By setting the 3rd argument to ``true`` in all setter functions, one can pass in an LDS.String values instead of a JS native String
 
  ```coffeescript
   str.release()
