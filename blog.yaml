@@ -10,6 +10,6 @@ posts:
  -
   id: lds
   file: lds.ds
-  title: LargeDS: Typed Arrays based Data Strcutures for memory intesive tasks
+  title: LargeDS: Typed Arrays based Data Structures for memory intensive tasks
   date: July 07, 2015
 
