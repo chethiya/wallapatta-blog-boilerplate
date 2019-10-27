@@ -1,6 +1,6 @@
 VERSION = 9
 
-Weya = require './weya/weya'
+Weya = (require 'weya').Weya
 
 UI_JS = [
  'static'

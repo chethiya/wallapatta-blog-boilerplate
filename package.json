@@ -1,0 +1,22 @@
+{
+  "name": "blog-boilerplate",
+  "version": "1.0.0",
+  "description": "Wallapatta blog boilerplate",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wallapatta/blog-boilerplate.git"
+  },
+  "author": "Varuna Jayasiri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wallapatta/blog-boilerplate/issues"
+  },
+  "homepage": "https://github.com/wallapatta/blog-boilerplate#readme",
+  "dependencies": {
+    "weya": "^0.1.1"
+  }
+}
