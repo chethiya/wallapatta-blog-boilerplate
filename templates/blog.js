@@ -73,16 +73,7 @@
                   href: post.id + ".html"
                 }, post.title);
               });
-              this.h3(".date", "" + post.date);
-              return this.div(".row", function() {
-                this.div(".wallapatta-main.nine.columns", "###MAIN" + i + "###");
-                this.div(".wallapatta-sidebar.three.columns", "###SIDEBAR" + i + "###");
-                return this.div({
-                  style: {
-                    display: 'none'
-                  }
-                }, "###CODE" + i + "###");
-              });
+              return this.h3(".date", "" + post.date);
             });
           }
           if (this.$.pages > 1) {

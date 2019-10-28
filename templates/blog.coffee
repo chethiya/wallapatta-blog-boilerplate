@@ -49,10 +49,7 @@ template = ->
        @a href: "#{post.id}.html", post.title
       @h3 ".date", "#{post.date}"
 
-      @div ".row", ->
-       @div ".wallapatta-main.nine.columns", "###MAIN#{i}###"
-       @div ".wallapatta-sidebar.three.columns", "###SIDEBAR#{i}###"
-       @div style: {display: 'none'}, "###CODE#{i}###"
+
 
     if @$.pages > 1
      @div ".paginate", ->

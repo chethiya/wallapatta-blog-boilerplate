@@ -3,13 +3,13 @@ postTemplate: templates/post
 postsPerPage: 3
 posts:
  -
-  id: wallapatta
-  file: wallapatta.walla
-  title: Git based blogging powered by Wallapatta
-  date: May 22, 2015
- -
   id: lds
   file: lds.walla
   title: LargeDS: Typed Arrays based Data Structures for memory intensive tasks
   date: July 07, 2015
+ -
+  id: wallapatta
+  file: wallapatta.walla
+  title: Git based blogging powered by Wallapatta
+  date: May 22, 2015
 
