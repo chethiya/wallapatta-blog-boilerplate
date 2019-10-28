@@ -1,6 +1,6 @@
 paginateTemplate: templates/blog
 postTemplate: templates/post
-postsPerPage: 3
+postsPerPage: 10
 posts:
  -
   id: lds
@@ -11,5 +11,10 @@ posts:
   id: wallapatta
   file: wallapatta.walla
   title: Git based blogging powered by Wallapatta
+  date: May 22, 2015
+ -
+  id: old
+  file: old.walla
+  title: See past posts...
   date: May 22, 2015
 

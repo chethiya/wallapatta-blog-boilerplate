@@ -69,3 +69,6 @@ h3.date {
 .codeBlock code {
  border: none;
 }
+.title {
+ font-size: 3.5rem;
+}
