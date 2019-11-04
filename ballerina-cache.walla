@@ -129,7 +129,7 @@ I increased the Java heap size and got rest of the results after the failed test
 
 So the slight increment in run-time as ``N`` grows is due to additional memory allocations it has to do within the same heap size.
 
-In my opinion it would have been nice if the compiler could handle 1 million records (60 bytes per each record) in a map within a 128MB heap. It might be quite tought with the way Java Garbage Collector works. Anyway it's not a big issue whereas the language doesn't seem to worry about those aspects too much right now.
+In my opinion it would have been nice if the compiler could handle 1 million records (60 bytes per each record) in a map within a 128MB heap. It's quite interesting to implement same Cache in Java and see whether it can handle 1 million items within 128MB. Anyway it's not a big issue whereas the language doesn't seem to worry about those aspects too much right now.
 
 >>>
  A ``CacheItem`` takes ~60 bytes assuming strings have 4 bytes for each character.
