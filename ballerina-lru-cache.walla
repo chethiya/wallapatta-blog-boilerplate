@@ -93,10 +93,10 @@ Here's a comparison of the run time of the ``O(N)`` implementation and the ``O(N
  640 | 18.129 | 275.218
  1000 | 18.435 | 423.605
 
->>>
- You can find the program used to measure these numbers <<https://github.com/chethiya/ballerina-cache/blob/master/src/cache/main.bal(here)>>
+--You can find the program used to measure these numbers <<https://github.com/chethiya/ballerina-cache/blob/master/src/cache/main.bal(here)>>--
 
- Measured times are real **elapsed time**. Not **CPU time**, which I couldn't find a way to measure in Ballerina.
++++
+ --Measured times are real **elapsed time**. Not **CPU time**, which I couldn't find a way to measure in Ballerina.--
 
 As you can see the run-time of the cache implementation in Ballerina Standard Library varies linearly as ``N`` grows. But stays quite stable for smaller ``N``, specially for values smaller than 20 or so. I guess this is probably due to CPU caching that takes place because of all operations occur in a smaller array when it computes the evicting entries.
 
