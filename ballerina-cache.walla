@@ -16,6 +16,8 @@ I was recently asked to implement an LRU cache during a coding interview and I w
 >>>
  You can find some examples <<https://ballerina.io/learn/by-example/(here)>>. See how easy it is to create a simple service with it <<https://ballerina.io/learn/by-example/hello-world-service.html(here)>>. It'll run in a pre allocated thread pool and you don't have to worry about settings those up.
 
+
+
 ### Current cache implementation of Ballerina in its Standard Library
 
 I wanted to give Ballerina a try for a long time, but I didn't get a chance. Finally I got some time to dig into their codebase and try it out. I was quite impressed by the fact that they have included an <<https://ballerina.io/learn/api-docs/ballerina/cache/index.html(LRU cache implementation in their standard library)>> and it's shipped together with the compiler. It looks like that caching implementation is consumed in few other places inside other standard libraries, like the <<https://ballerina.io/learn/api-docs/ballerina/http/index.html(HTTP module)>>.
@@ -79,7 +81,7 @@ You can find my LRU cache implementation on Ballerina <<https://github.com/cheth
 Here's a comparison of the run time of the ``O(N)`` implementation and the ``O(NM)`` implementation in Ballerina Standard Library:
 
 |||
- Capacity ``(N)`` | ``O(N)`` Cache access time (s) | ``O(NM)`` Cache access time (s)
+ Capacity ``(N)`` | ``O(M)`` Cache run-time (s) | ``O(NM)`` Cache run-time (s)
  ===
  5 | 11.876 | 21.133
  10 | 15.760 | 17.318
@@ -96,8 +98,69 @@ Here's a comparison of the run time of the ``O(N)`` implementation and the ``O(N
 
  Measured times are real **elapsed time**. Not **CPU time**, which I couldn't find a way to measure in Ballerina.
 
-As you can see the run-time of the cache implementation in Ballerina Standard Library varies linearly as ``N`` grows. But stays quite stable for smaller ``N``, specially for values smaller than 20 or so. I guess probably this is due CPU caching that takes place because of all operations occur in a smaller array when it computes the evicting entries.
+As you can see the run-time of the cache implementation in Ballerina Standard Library varies linearly as ``N`` grows. But stays quite stable for smaller ``N``, specially for values smaller than 20 or so. I guess this is probably due to CPU caching that takes place because of all operations occur in a smaller array when it computes the evicting entries.
 
-TODO - how O(N) works when cache size is 100, 1000, 10000, 100000, and 1000000
+It looks like there's a slight increase in time as ``N`` increases for ``O(M)`` implementation. To verify this I tried with few different ``N`` and had following results:
 
+|||
+ Capacity ``(N)`` | ``O(M)`` Cache run-time (s)
+ ===
+ 10^^2^^ | 10.470
+ 10^^3^^ | 10.545
+ 10^^4^^ | 13.518
+ 10^^5^^ | 19.555
+ 10^^6^^ (with default heap size) | GC overhead limit exceeded
+ 10^^6^^ (with 256MB) | 44.177
+ 10^^6^^ (with 512MB) | 21.131
+ 10^^6^^ (with 1024MB) | 18.156
+
+For ``N``=10^^6^^ with the default heap size, it crashes giving following error:
+
+```
+ java.lang.OutOfMemoryError: GC overhead limit exceeded
+
+>>>
+ I think the default heap size of Ballerina is 128MB
+
+I increased the Java heap size and got rest of the results after the failed test. Here we observe that as heap size increases, the runt-time performance also becomes better. I think this is due to the additional computations that need to be done when trying to allocate space for objects within a small heap vs doing that in a larger heap.
+
+>>>
+ Do ``export JAVA_OPTS="-Xmx512m"`` to increase heap
+
+So the slight increment in run-time as ``N`` grows is due to additional memory allocations it has to do within the same heap size.
+
+In my opinion it would have been nice if the compiler could handle 1 million records (60 bytes per each record) in a map within a 128MB heap. It might be quite tought with the way Java Garbage Collector works. Anyway it's not a big issue whereas the language doesn't seem to worry about those aspects too much right now.
+
+>>>
+ A ``CacheItem`` takes ~60 bytes assuming strings have 4 bytes for each character.
+
+### How to use
+
+You can find my implementaion as a module at <<https://central.ballerina.io/chethiya/cache(Ballerina Central)>>.
+
+>>>
+ It's a public package repository for Ballerina.
+
+You can pull it within your code by adding it as a dependency in your project by editing ``.toml`` file. e.g.
+
+```
+ [dependencies]
+ "chethiya/cache" = "0.2.1"
+
+Run following command to pull the module:
+
+```
+ ballerina pull chethiya/cache
+
+Now you are ready to use the ``LRUCache`` in your code. Simply import the module and create an instance of it in your ``.bal`` file. e.g.
+
+```java
+ import ballerina/io;
+ import chethiya/cache;
+ public function main() {
+     cache:LRUCache cache = new(100, 0);
+     io:print(cache.capacity());
+ }
+
+If you have any issue regarding this implementation, please report those <<https://github.com/chethiya/ballerina-cache/issues(here)>>.
 
