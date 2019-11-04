@@ -1,6 +1,6 @@
 ### LRU Cache
 
-Caching is a quite useful concept. Among many different types of caches, LRU caches are a quite popular choice. The basic idea is to retain most recently used --n-- outcomes that can fit inside the allocated memory for the cache. So those cached outcomes can be used to serve subsequent queries without recomputing those outcomes. This is quite a good fit for most practical use cases when:
+Caching is a quite useful concept, specially if you have relatively heavy computations that might not need to be done every single time. Among many different types of caches, LRU caches are a quite popular choice. The basic idea is to retain most recently used --n-- outcomes that can fit inside the allocated memory for the cache. So those cached outcomes can be used to serve subsequent queries without recomputing those outcomes. This is quite a good fit for most practical use cases when:
 
 >>>
  LRU means --Least Recently Used--. That's the eviction policy, the policy that is used to remove items from cache to make room for new items.
@@ -8,48 +8,52 @@ Caching is a quite useful concept. Among many different types of caches, LRU cac
 * same query is likely to occur in a reasonably small time window,
 * computed outcomes for queries are time sensitive. i.e. outcomes depends on the time it's computed.
 
-If outcomes are not time sensitive, then caching most frequently used outcomes might be a better choice.
+>>>
+ If outcomes are not time sensitive, then caching most frequently used outcomes might be a better choice.
 
-I was recently asked to implement an LRU cache during a coding interview and I was quite happy that interviewers do ask non hypothetical questions too. Anyway this article is not about interviews. It's an LRU cache implementation for a new programming language called, <<https://github.com/ballerina-platform/ballerina-lang(Ballerina)>>.
+I was recently asked to implement an LRU cache during a coding interview and I was quite happy that interviewers do ask non hypothetical questions too. Anyway this article is not about interviews. It's an LRU cache implementation for a new programming language called <<https://github.com/ballerina-platform/ballerina-lang(Ballerina)>>.
 
 >>>
- You can find some examples <<https://ballerina.io/learn/by-example/(here)>>. See how easy it is to create a simple service with it <<https://ballerina.io/learn/by-example/hello-world-service.html(here)>>. It'll run in a pre allocated thread pool and you don't have to worry about it.
+ You can find some examples <<https://ballerina.io/learn/by-example/(here)>>. See how easy it is to create a simple service with it <<https://ballerina.io/learn/by-example/hello-world-service.html(here)>>. It'll run in a pre allocated thread pool and you don't have to worry about settings those up.
 
-### Current Cache Implementation of Ballerina in Standard Library
+### Current cache implementation of Ballerina in its Standard Library
 
-I wanted to give Ballerina a try for a long time, but I didn't get a chance. Finally I got some time to dig into their code base and try it out. I was quite impressed by the fact that they have included an <<https://ballerina.io/learn/api-docs/ballerina/cache/index.html(LRU cache implementation)>> in their standard libraries and it's shipped together the compiler. It looks like that caching implementation is consumed in few other places inside standard libraries, like the <<https://ballerina.io/learn/api-docs/ballerina/http/index.html(HTTP module)>>.
+I wanted to give Ballerina a try for a long time, but I didn't get a chance. Finally I got some time to dig into their codebase and try it out. I was quite impressed by the fact that they have included an <<https://ballerina.io/learn/api-docs/ballerina/cache/index.html(LRU cache implementation in their standard library)>> and it's shipped together with the compiler. It looks like that caching implementation is consumed in few other places inside other standard libraries, like the <<https://ballerina.io/learn/api-docs/ballerina/http/index.html(HTTP module)>>.
 
 I looked at their caching implementation and found these issues with it:
 
-* Its runtime complexity is not the optimal for LRU. If size of the buffer is ``N`` and if there are ``M`` cache queries (assuming GET/SET ratio is constant) then its time complexity is ``O(NM)``. LRU cache can be implemented to run in ``O(M)``.
+* Its runtime complexity is not the optimal for a LRU Cache. If size of the buffer is ``N`` and if there are ``M`` cache queries (assuming GET/SET ratio is constant) then its run time complexity is ``O(NM)``. The LRU Cache can be implemented to run in ``O(M)``.
 
 >>>
  So this implementation doesn't scale well when cache size grows. i.e. higher the number of outcomes you want to cache, slower it'll perform.
 
-* It has a parameter called eviction factor ``f``, and what it does is once the cache is full it removes ``N*f`` least recently used items. This behavior doesn't utilize allocated memory for the cache in 100%, but average utilization is something like ``(1-f)*100 + (f*100/2)`` percent.
+* It has a parameter called --eviction factor-- ``f``, and what it does is once the cache is full it removes ``N*f`` least recently used items. This behavior doesn't utilize allocated memory for the cache in 100%, but average utilization is something like ``(1-f)*100 + (f*100/2)`` percent.
 
-* It compares between all timestamps of the items to compute the least recently used ``N*f`` items to be evicted. But this depends on the time precision of the timestamp. Currently stores timestamp in milliseconds. So if all items in the cache are accessed in the same millisecond, then above computation would be inaccurate.
+* It compares between all timestamps of the items to compute the least recently used ``N*f`` items to be evicted. But this depends on the precision of the timestamp. It currently stores timestamps in milliseconds. So if all items in the cache are accessed in the same millisecond, then above computation would be inaccurate.
 
-* It has a separate task running every 5 seconds to cleanup expired cache entries. This also introduces a shared lock between all cache instances. Altogether this cleanup processes is unnecessary work as this check can be done only during the GET operation. Also it doesn't make much sense to do this regular cleanup work for saving memory. Usually LRU caches are expected to be full all the time. If not consumer should consider reducing amount of memory (i.e. ``N``) allocated for the cache.
+* It has a separate task running every 5 seconds to cleanup expired cache entries. The way it's implemented this also introduces a shared lock between all cache instances. Altogether this cleanup processes is unnecessary work as this check can be done only during the GET operation. Also it doesn't make much sense to do this regular cleanup work for saving memory. Usually LRU caches are expected to be full all the time. If not consumer should consider reducing the amount of memory (i.e. ``N``) allocated for the cache.
 
 * It seems to be written in a non thread-safe manner. See <<https://github.com/ballerina-platform/ballerina-lang/issues/19187#issuecomment-544975764(here)>> the comment I made in an issue.
 
 +++
  **Here how the current implementation takes ``O(NM)`` time:**
 
- Once cache is reached to it's capacity it computes ``Nf`` least recently used entries in cache. That's done in ``O(N*Nf)``, using 2 loops. This could have been done much faster using a heap, but not really relaxant in this case.
+ Once cache is reached to it's capacity it computes ``Nf`` least recently used entries in cache. That's done in ``O(N*Nf)``, using 2 loops. This could have been done much faster using a heap, but that approach won't help us much to get the overall time complexity down to ``O(M)``
 
- Out of ``M`` cache access, if we assume the ratio between GET/SET operations is constant, then we can assume the above eviction is going to happen ``O(M/(N*f))``. Note the the use of ``O()`` here to eliminate that constant factor.
+ Out of ``M`` cache access, if we assume the ratio between GET/SET operations is constant, then we can assume the above eviction is going to happen ``O(M/(N*f))`` times. Note that the "Big O" eliminates that constant factor.
 
- So total run time complexity is ``O((M/Nf) * (N*Nf))=O(MN)``
+ So total run time complexity is ``O((M/Nf) * (N*Nf))=O(MN)``.
+
+ >>>
+  This is the total time taken for  eviction, which is the dominant part of total time.
 
 
 ### How to do it in ``O(M)``
 
-We should be able to implement LRU cache so that its time complexity is independent from the cache size. Key idea to do so is to use a separate linked list to store entries sorted by their access time. Entries in the map will have a pointer to the corresponding item in the linked list, so that whenever you access an item, you can move that item to the front of the linked list. Therefore the least recently accessed item is alway the tail item of the linked list.
+We should be able to implement LRU cache so that its time complexity is independent from the cache size. Key idea to do so is to use a separate linked list to store entries sorted by their access time. Entries in the map will have a pointer to the corresponding item in the linked list, so that whenever you access an item, you can move that item to the front of the linked list. That way the least recently accessed item is alway the tail item of the linked list.
 
 +++
- Here's general explanation on how LRU caches are implemented at <<https://www.geeksforgeeks.org/lru-cache-implementation/(GeeksforGeeks)>>
+ <<https://www.geeksforgeeks.org/lru-cache-implementation/(Here)>> is a general explanation on how LRU caches are implemented.
 
 >>>
  GeeksforGeeks is a really good resource if you want to revise/learn algorithms and data structures. Also it's a quite good resource if you are preparing for coding interviews.
@@ -68,9 +72,11 @@ You can find my LRU cache implementation on Ballerina <<https://github.com/cheth
 
  * Right now Ballerina maps are thread-safe. So that synchronizations on map operations are redundant, as all LRU cache operations anyway need to be synchronized using ``lock``.
 
+ * I initially implemented ``CacheItem`` as a <<https://ballerina.io/learn/by-example/records.html(Ballerina Closed Record)>>. But looking at Ballerina code, it looks like Records are implemented as Hashtables. If you look at caching implementation, attributes of ``CacheItem``s are accessed all the time. So having to access these attributes using a Hashtable doesn't make much sense. Ideally it should be implemented using something like C struct. Therefore I changed ``CacheItem`` implementation to use <<https://ballerina.io/learn/by-example/objects.html(Ballerina Objects)>> which is similar to Java classes.
+
 ### Performance
 
-Here's a comparison of run-time of ``O(N)`` implementation and the ``O(NM)`` implementation in Ballerina standard library:
+Here's a comparison of the run time of the ``O(N)`` implementation and the ``O(NM)`` implementation in Ballerina Standard Library:
 
 |||
  Capacity ``(N)`` | ``O(N)`` Cache access time (s) | ``O(NM)`` Cache access time (s)
@@ -90,5 +96,8 @@ Here's a comparison of run-time of ``O(N)`` implementation and the ``O(NM)`` imp
 
  Measured times are real **elapsed time**. Not **CPU time**, which I couldn't find a way to measure in Ballerina.
 
-As you can see the run-time of cache implementation in Ballerina standard library varies linearly as ``N`` grows. But stays quite stable for smaller ``N``, specially values smaller than 20 or so. I guess probably this is due CPU caching that takes place because all all operations occur in a smaller array when it computes the evicting entries. On the other hand ``O(N)`` solution might run faster if we use an array instead of linked list for smaller ``N``.
+As you can see the run-time of the cache implementation in Ballerina Standard Library varies linearly as ``N`` grows. But stays quite stable for smaller ``N``, specially for values smaller than 20 or so. I guess probably this is due CPU caching that takes place because of all operations occur in a smaller array when it computes the evicting entries.
+
+TODO - how O(N) works when cache size is 100, 1000, 10000, 100000, and 1000000
+
 
