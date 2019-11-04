@@ -155,12 +155,33 @@ Run following command to pull the module:
 Now you are ready to use the ``LRUCache`` in your code. Simply import the module and create an instance of it in your ``.bal`` file. e.g.
 
 ```java
- import ballerina/io;
+ import ballerina/http;
+ import ballerina/log;
  import chethiya/cache;
- public function main() {
-     cache:LRUCache cache = new(100, 0);
-     io:print(cache.capacity());
+
+ // Keep 1000 search results and expire 1 mininutes after setting
+ // search results.
+ cache:LRUCache cachedResults = new(1000, 60000, false);
+
+ service hello on new http:Listener(9090) {
+   resource function sayHello(http:Caller caller, http:Request req) {
+     var query = getQuery(req);
+     SearchResult? result = cachedResults.get(query);
+     if (result is ()) {
+       result = computeResult(query);
+       cachedResults.put(query, result);
+     }
+     var res = caller->respond(result);
+     if (res is error) {
+         log:printError("Error sending response", result);
+     }
+   }
  }
+
+>>>
+ Note the initializer is little different in this compared to Stdlib Cache.
+
+ Note how it can expire entries based on time, only considering SET time irrespective of SET times.
 
 If you have any issue regarding this implementation, please report those <<https://github.com/chethiya/ballerina-cache/issues(here)>>.
 

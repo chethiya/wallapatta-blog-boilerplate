@@ -3,10 +3,10 @@ postTemplate: templates/post
 postsPerPage: 10
 posts:
  -
-  id: ballerina-cache
-  file: ballerina-cache.walla
+  id: ballerina-lru-cache
+  file: ballerina-lru-cache.walla
   title: Writing an LRU cache for a new language
-  date: Nov 02, 2019
+  date: Nov 05, 2019
  -
   id: lds
   file: lds.walla
